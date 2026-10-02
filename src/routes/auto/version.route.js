@@ -16,7 +16,7 @@ router.get('/version', (_req, res) => {
   const pkg = JSON.parse(
     fs.readFileSync(path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8')
   )
-  res.status(200).json({ version: pkg.version })
+  res.status(202).json({ version: pkg.version })
 })
 
 export default router
