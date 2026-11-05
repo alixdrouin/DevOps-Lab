@@ -1,0 +1,34 @@
+$kind: http-request
+description: ""
+url: http://127.0.0.1:3000/api/profiles/2
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"John\",\r
+
+    \  \"year\": 3\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 400\", function () {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Error message is correct\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \r
+
+      \    pm.expect(response.error).to.eql(\"Missing required fields\");\r
+
+      });"
+    language: text/javascript
+order: 4000
