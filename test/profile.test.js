@@ -60,16 +60,16 @@ describe('STUD-9 - Fill My Profile API', () => {
     expect(res.status).toBe(404)
   })
 })
-  it('should reject an invalid profile ID', async () => {
-    const res = await request(app)
-      .put('/api/profiles/0')
-      .send({
-  name: 'Mariem',
-  year: 4,
-  major: 'Data Science and AI',
-  bio: 'Engineering student interested in AI.'
-})
+it('should reject an invalid profile ID', async () => {
+  const res = await request(app)
+    .put('/api/profiles/0')
+    .send({
+      name: 'Mariem',
+      year: 4,
+      major: 'Data Science and AI',
+      bio: 'Engineering student interested in AI.'
+    })
 
-    expect(res.status).toBe(400)
-    expect(res.body.error).toBe('Invalid profile ID')
-  })
+  expect(res.status).toBe(400)
+  expect(res.body.error).toBe('Invalid profile ID')
+})
