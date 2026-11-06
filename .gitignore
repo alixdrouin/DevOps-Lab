@@ -50,4 +50,6 @@ Thumbs.db
 *.tsbuildinfo
 
 # Optional: ignore GitHub workflows cache
-.github/workflows/*.cache
+.github/workflows/*.cache.env.test
+
+.env.test
