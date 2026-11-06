@@ -17,11 +17,12 @@ const __dirname = path.dirname(__filename)
 const require = createRequire(import.meta.url)
 
 const app = express()
+// Allow Express to read JSON data sent by clients
+app.use(express.json())
 
 // Simple root + health endpoints
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
 app.get('/health', (_req, res) => res.status(200).send('OK'))
-
 // Auto-mount all routers placed under src/routes/auto
 const autoDir = path.join(__dirname, 'routes', 'auto')
 if (fs.existsSync(autoDir)) {
