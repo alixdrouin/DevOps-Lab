@@ -1,0 +1,28 @@
+$kind: http-request
+url: http://127.0.0.1:3000/api/profiles/1
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response contains student profile\", function () {\r
+
+      \    const profile = pm.response.json();\r
+
+      \r
+
+      \    pm.expect(profile).to.have.property(\"id\", 1);\r
+
+      \    pm.expect(profile).to.have.property(\"name\", \"Alice Martin\");\r
+
+      \    pm.expect(profile).to.have.property(\"major\");\r
+
+      });"
+    language: text/javascript
+order: 3000

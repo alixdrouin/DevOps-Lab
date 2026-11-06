@@ -1,0 +1,34 @@
+$kind: http-request
+name: Create Student Profile.
+url: http://127.0.0.1:3000/api/profiles/1
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Alice Martin\",\r
+
+    \  \"year\": 4,\r
+
+    \  \"major\": \"Data Science and AI\",\r
+
+    \  \"bio\": \"Engineering student interested in machine learning.\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 201 or 200\", function () {\r
+
+      \    pm.expect([200, 201]).to.include(pm.response.code);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response contains a profile ID\", function () {\r
+
+      \    pm.expect(pm.response.json()).to.have.property(\"id\");\r
+
+      });"
+    language: text/javascript
+order: 1000
