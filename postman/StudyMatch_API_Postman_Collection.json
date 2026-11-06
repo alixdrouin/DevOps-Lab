@@ -206,6 +206,16 @@
         }
       },
       "response": []
-    }
+    },
+     {"name": "Get All Subjects", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"]}}], "request": {"method": "GET", "header": [], "url": "http://127.0.0.1:3000/api/subjects"}},
+    {"name": "Get One Subject", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"]}}], "request": {"method": "GET", "header": [], "url": "http://127.0.0.1:3000/api/subjects/1"}},
+    {"name": "Add Subject", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));"]}}], "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "http://127.0.0.1:3000/api/subjects", "body": {"mode": "raw", "raw": "{\"name\": \"Physics\", \"level\": \"Intermediate\"}"}}},
+    {"name": "Add Subject - Missing Fields", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 400\", () => pm.response.to.have.status(400));"]}}], "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "http://127.0.0.1:3000/api/subjects", "body": {"mode": "raw", "raw": "{\"name\": \"Chemistry\"}"}}},
+    {"name": "Update Subject", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"]}}], "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "url": "http://127.0.0.1:3000/api/subjects/1", "body": {"mode": "raw", "raw": "{\"level\": \"Expert\"}"}}},
+    {"name": "Delete Subject", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 204\", () => pm.response.to.have.status(204));"]}}], "request": {"method": "DELETE", "header": [], "url": "http://127.0.0.1:3000/api/subjects/2"}},
+    {"name": "Get Subject - Not Found", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 404\", () => pm.response.to.have.status(404));"]}}], "request": {"method": "GET", "header": [], "url": "http://127.0.0.1:3000/api/subjects/999"}},
+    {"name": "Reminders For Tomorrow", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"]}}], "request": {"method": "GET", "header": [], "url": "http://127.0.0.1:3000/api/reminders?today=2026-11-09"}},
+    {"name": "Reminders - Invalid Date", "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 400\", () => pm.response.to.have.status(400));"]}}], "request": {"method": "GET", "header": [], "url": "http://127.0.0.1:3000/api/reminders?today=hello"}}
+
   ]
 }
