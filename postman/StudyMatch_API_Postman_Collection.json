@@ -1,0 +1,211 @@
+{
+  "info": {
+    "name": "StudyMatch API Tests",
+    "description": "StudyMatch REST API tests reconstructed from the provided Postman YAML request files.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Student Profile.",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201 or 200\", function () {",
+              "    pm.expect([200, 201]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test(\"Response contains a profile ID\", function () {",
+              "    pm.expect(pm.response.json()).to.have.property(\"id\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/profiles/1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "profiles",
+            "1"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Alice Martin\",\r\n  \"year\": 4,\r\n  \"major\": \"Data Science and AI\",\r\n  \"bio\": \"Engineering student interested in machine learning.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Student Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains student profile\", function () {",
+              "    const profile = pm.response.json();",
+              "",
+              "    pm.expect(profile).to.have.property(\"id\", 1);",
+              "    pm.expect(profile).to.have.property(\"name\", \"Alice Martin\");",
+              "    pm.expect(profile).to.have.property(\"major\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/profiles/1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "profiles",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Profile - Missing Fields",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Error message is correct\", function () {",
+              "    const response = pm.response.json();",
+              "",
+              "    pm.expect(response.error).to.eql(\"Missing required fields\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/profiles/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "profiles",
+            "2"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"John\",\r\n  \"year\": 3\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Profile - Not Found",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test(\"Error message is correct\", function () {",
+              "    const response = pm.response.json();",
+              "",
+              "    pm.expect(response.error).to.eql(\"Profile not found\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/profiles/999",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "profiles",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
