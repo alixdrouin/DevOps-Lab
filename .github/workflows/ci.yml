@@ -10,6 +10,12 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+
     steps:
       # 1) Checkout source
       - name: Checkout repository
@@ -31,8 +37,13 @@ jobs:
         run: npm run lint
 
       # 5) Test with coverage
+      
+      # 5) Test with coverage
       - name: Test (with coverage)
         run: npm test -- --coverage
+        env:
+          MONGODB_URI: mongodb://127.0.0.1:27017/studymatch_test
+
 
       # 6) Upload coverage folder as an artifact (viewable in Actions UI)
       - name: Upload coverage artifact
