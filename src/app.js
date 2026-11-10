@@ -6,6 +6,7 @@
  *  - Global error handler (consistent JSON for errors)
  */
 import express from 'express'
+import registrationsRouter from './routes/registrations.routes.js'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -17,9 +18,9 @@ const __dirname = path.dirname(__filename)
 const app = express()
 // Allow Express to read JSON data sent by clients
 app.use(express.json())
-
+app.use('/api/sessions', registrationsRouter)
 // Simple root + health endpoints
-app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
+app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo' }))
 app.get('/health', (_req, res) => res.status(200).send('OK'))
 // Auto-mount all routers placed under src/routes/auto
 const autoDir = path.join(__dirname, 'routes', 'auto')
