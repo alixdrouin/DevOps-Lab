@@ -5,9 +5,9 @@ import { connectDatabase } from './config/database.js'
 
 const PORT = process.env.PORT || 3000
 
-async function startServer() {
+async function startServer () {
   try {
-    await connectDatabase()                         // driver natif (équipe)
+    await connectDatabase() // driver natif (équipe)
     await mongoose.connect(process.env.MONGODB_URI) // Mongoose (ma route)
     console.log('[database] Mongoose connected')
 
