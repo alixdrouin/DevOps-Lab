@@ -1,10 +1,11 @@
+
 name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-and-test:
@@ -21,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) Setup Node with caching for npm
+      # 2) Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -37,15 +38,13 @@ jobs:
         run: npm run lint
 
       # 5) Test with coverage
-      
-      # 5) Test with coverage
       - name: Test (with coverage)
         run: npm test -- --coverage
         env:
           MONGODB_URI: mongodb://127.0.0.1:27017/studymatch_test
+          JWT_SECRET: studymatch-ci-test-only-secret-not-for-production
 
-
-      # 6) Upload coverage folder as an artifact (viewable in Actions UI)
+      # 6) Upload coverage
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         if: always()
