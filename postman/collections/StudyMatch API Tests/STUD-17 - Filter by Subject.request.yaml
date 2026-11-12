@@ -1,0 +1,7 @@
+$kind: http-request
+description: ""
+url: http://localhost:3000/api/sessions?subject=Math
+method: GET
+queryParams:
+  subject: Math
+order: 9000
