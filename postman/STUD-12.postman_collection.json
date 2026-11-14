@@ -1,0 +1,220 @@
+
+{
+  "info": {
+    "name": "STUD-12 - Edit or Cancel Session",
+    "description": "Postman tests for StudyMatch tutoring session editing and cancellation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "STUD-12 - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"demo@studymatch.fr\",\n  \"password\": \"demo1234\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/login",
+        "description": "Log in and obtain a JWT token."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login returns 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "    const data = pm.response.json();",
+              "    pm.test('JWT token is returned', function () {",
+              "        pm.expect(data.token).to.be.a('string');",
+              "    });",
+              "    if (data.token) pm.collectionVariables.set('token', data.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "STUD-12 - Edit Session",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Physics\",\n  \"place\": \"Room B\",\n  \"maxSeats\": 8\n}"
+        },
+        "url": "{{baseUrl}}/api/sessions/{{sessionId}}",
+        "description": "Only the session tutor can edit an active session."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Session updated successfully', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "    const data = pm.response.json();",
+              "    pm.test('Updated fields are correct', function () {",
+              "        pm.expect(data.session.subject).to.eql('Physics');",
+              "        pm.expect(data.session.place).to.eql('Room B');",
+              "        pm.expect(data.session.maxSeats).to.eql(8);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "STUD-12 - Cancel Session",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "url": "{{baseUrl}}/api/sessions/{{sessionId}}/cancel",
+        "description": "Only the session tutor can cancel an active session."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Session cancelled successfully', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "    pm.test('Status is Cancelled', function () {",
+              "        pm.expect(pm.response.json().status).to.eql('Cancelled');",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "STUD-12 - Cannot Edit Cancelled Session",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"Physics\"}"
+        },
+        "url": "{{baseUrl}}/api/sessions/{{sessionId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Cancelled session cannot be edited', function () {",
+              "    pm.response.to.have.status(409);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "STUD-12 - Unauthorized Edit",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"Physics\"}"
+        },
+        "url": "{{baseUrl}}/api/sessions/{{sessionId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Unauthenticated edit returns 401', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "sessionId",
+      "value": "6af2f32bc083b3a2654534a9"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
