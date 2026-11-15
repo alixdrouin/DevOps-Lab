@@ -12,6 +12,15 @@ export async function connectDatabase () {
   const newClient = new MongoClient(uri)
   await newClient.connect()
   await newClient.db().collection('users').createIndex({ email: 1 }, { unique: true })
+
+  await newClient.db().collection('registrations').createIndex(
+    { sessionId: 1, studentId: 1 },
+    {
+      unique: true,
+      partialFilterExpression: { status: 'registered' }
+    }
+  )
+
   client = newClient
 
   console.log('[database] Connected to MongoDB')
