@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { ObjectId } from 'mongodb'
 import { getDatabase } from '../../config/database.js'
 import { requireAuth } from '../../middleware/auth.js'
-
+import { registerForSession } from '../../services/register-session.service.js'
 const router = Router()
 
 // STUD-12: Edit a tutoring session
@@ -154,8 +154,6 @@ router.post('/api/sessions', async (req, res) => {
   const { subject, date, time, place, onlineLink, maxSeats } = req.body
 
   // Check required fields
-
-  // Check required fields
   if (
     typeof subject !== 'string' || !subject.trim() ||
     typeof date !== 'string' || !date.trim() ||
@@ -213,7 +211,6 @@ router.post('/api/sessions', async (req, res) => {
       error: 'Maximum seats must be a positive integer'
     })
   }
-
   // Create a new study session
   const newSession = {
     subject,
@@ -222,6 +219,7 @@ router.post('/api/sessions', async (req, res) => {
     place: place || null,
     onlineLink: onlineLink || null,
     maxSeats,
+    reservedSeats: 0,
     createdAt: new Date()
   }
 
@@ -269,6 +267,20 @@ router.get('/api/sessions/upcoming', async (req, res) => {
     res.status(500).json({
       error: 'Failed to retrieve upcoming sessions'
     })
+  }
+})
+
+// STUD-14: Register for a study session
+router.post('/api/sessions/:id/register', requireAuth, async (req, res, next) => {
+  try {
+    const sessionId = req.params.id
+    const studentId = req.user.id
+
+    const result = await registerForSession(sessionId, studentId)
+
+    return res.status(201).json(result)
+  } catch (error) {
+    next(error)
   }
 })
 
